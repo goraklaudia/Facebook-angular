@@ -1,0 +1,10 @@
+.container {
+    border: 2px solid black;
+    height: 90%;
+    width: 98%;
+}
+.nav {
+    background: rgb(207, 207, 207);
+    text-align: center;
+    color: rgb(43, 43, 167);
+}
