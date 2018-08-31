@@ -8,11 +8,13 @@ import { HttpModule } from '@angular/http';
 import { DisplayPostService } from './display-posts/display-post.service';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { PaginationComponent } from './pagination/pagination.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    DisplayPostsComponent
+    DisplayPostsComponent,
+    PaginationComponent
   ],
   imports: [
     BrowserModule,    
