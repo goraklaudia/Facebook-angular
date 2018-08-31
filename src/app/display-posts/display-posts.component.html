@@ -1,5 +1,14 @@
 <div class="inpdiv">
-    <input type="number"> &nbsp;: na strone
+    <input type="number" [(ngModel)]="objectPerPage"> &nbsp;: na strone&nbsp;&nbsp;&nbsp;
+    <button (click)="setValueOfObject(objectPerPage)">Ustaw</button>
 </div>
-<ul>
+<br>
+<br>
+<br>
+<ul *ngFor="let data of postsList">
+    <li>
+        <a>{{data.title}}</a> <br>
+        {{data.body}}
+        <br>
+    </li>
 </ul>

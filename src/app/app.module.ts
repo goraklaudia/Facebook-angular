@@ -1,14 +1,13 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { DisplayPostsComponent } from './display-posts/display-posts.component';
-import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from './app.component';
-
-
-const appRoutes: Routes = [
-  {path:'display-posts', component: DisplayPostsComponent}
-]
+import { AppRoutingModule } from './/app-routing.module';
+import { HttpModule } from '@angular/http';
+import { DisplayPostService } from './display-posts/display-post.service';
+import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -18,12 +17,12 @@ const appRoutes: Routes = [
   imports: [
     BrowserModule,    
     HttpClientModule,
-    RouterModule.forRoot(
-      appRoutes,
-      {enableTracing: true}
-    )
+    AppRoutingModule,
+    HttpModule,
+    RouterModule,
+    FormsModule
   ],
-  providers: [],
+  providers: [DisplayPostService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -8,3 +8,7 @@ input {
 .inpdiv {
     text-align:center;
 }
+
+a {
+    font-weight: bold;
+}
