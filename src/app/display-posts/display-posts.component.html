@@ -1,14 +1,14 @@
 <div class="inpdiv">
-    <input type="number" [(ngModel)]="objectPerPage"> &nbsp;: na strone&nbsp;&nbsp;&nbsp;
-    <button (click)="setValueOfObject(objectPerPage)">Ustaw</button>
+    <input type="number" [(ngModel)]="objectPerPage" min="1"> &nbsp;: na strone&nbsp;&nbsp;&nbsp;
 </div>
 <br>
 <br>
 <br>
-<ul *ngFor="let data of postsList">
+<ul *ngFor="let data of postsList | paginate: { itemsPerPage: objectPerPage, currentPage: p }">
     <li>
         <a>{{data.title}}</a> <br>
         {{data.body}}
         <br>
     </li>
 </ul>
+<pagination-controls (pageChange)="p = $event"></pagination-controls>

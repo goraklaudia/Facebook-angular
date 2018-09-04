@@ -8,13 +8,12 @@ import { HttpModule } from '@angular/http';
 import { DisplayPostService } from './display-posts/display-post.service';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { PaginationComponent } from './pagination/pagination.component';
+import {NgxPaginationModule} from 'ngx-pagination'; 
 
 @NgModule({
   declarations: [
     AppComponent,
-    DisplayPostsComponent,
-    PaginationComponent
+    DisplayPostsComponent
   ],
   imports: [
     BrowserModule,    
@@ -22,7 +21,8 @@ import { PaginationComponent } from './pagination/pagination.component';
     AppRoutingModule,
     HttpModule,
     RouterModule,
-    FormsModule
+    FormsModule,
+    NgxPaginationModule
   ],
   providers: [DisplayPostService],
   bootstrap: [AppComponent]
