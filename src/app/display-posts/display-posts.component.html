@@ -1,5 +1,5 @@
 <div class="inpdiv">
-    <input type="number" [(ngModel)]="objectPerPage" min="1"> &nbsp;: na strone&nbsp;&nbsp;&nbsp;
+    <input type="number" [(ngModel)]="objectPerPage" min="1" max="99" value="2" (input)="setObjectsPerPage(objectPerPage)"> &nbsp;: na strone
 </div>
 <br>
 <br>

@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule} from '@angular/core';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { DisplayPostsComponent } from './display-posts/display-posts.component';
 import { AppComponent } from './app.component';
