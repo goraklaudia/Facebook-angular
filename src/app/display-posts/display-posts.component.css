@@ -12,3 +12,25 @@ input {
 a {
     font-weight: bold;
 }
+
+
+.box {
+    float: left;
+    margin: 2px;
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    color: rgb(91, 91, 117);
+    border: 0.5px solid rgba(247, 243, 243, 0.452);
+}
+
+.numberPage {
+    float: left;
+    margin: 2px;
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    color: rgb(95, 95, 110);
+}

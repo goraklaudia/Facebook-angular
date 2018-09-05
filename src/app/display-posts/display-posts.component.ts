@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit, Input, Output} from '@angular/core';
 import { DisplayPostService } from './display-post.service';
 import { Router } from '@angular/router';
 import { Post } from './Post';
@@ -12,42 +12,102 @@ import { SimpleChanges } from '@angular/core';
 export class DisplayPostsComponent implements OnInit {
 
   postsList: Post[] = [];
-  perPage: number = 2;
+  itemPerPage: number;
+  postId: number;
+  twoTimesLoad:number;
+
+  @Input() currentPage: number;
+  @Input() amountOfPages: number;
+
+
   constructor(private router: Router, private httpService: DisplayPostService) { }
 
   ngOnInit() {
-    this.getPosts().then((data) => {
-      for(let i=0; i< this.perPage; i++)
-        this.postsList.push(data[i]);
-    });
+    this.currentPage = 1;
+    this.itemPerPage = 2;
+    this.postId = 1;
+    this.twoTimesLoad = 0;
+    this.loadTwoPost();
   }
 
-  getPosts() {
+  getPosts(number) {
     return new Promise((resolve, reject) => {
-      this.httpService.getPosts().subscribe(posts => {
-        resolve(posts);
-      });
+      this.httpService.getPosts(number).subscribe(post => {
+        this.postId++;
+        resolve(post);
+      })
     })
   }
 
-  setObjectsPerPage(number){
-
-    this.getPosts().then((data) => {
-      if(number > this.perPage)
-      {
-        for(let i = this.perPage+1; i<= number; i++)
-        {
-          this.postsList.push(data[i]);
-        }
-            
-        this.perPage = number;
-      }
-      else if (number < this.perPage) 
-      {
-          this.postsList.splice(number, this.perPage-number);
-          this.perPage = number;
-      }
-
+  loadTwoPost() {
+    this.getPosts(this.postId)
+      .then((data) => {
+          if(this.twoTimesLoad!=2)
+          {
+            this.postsList.push(data[0]);
+            this.twoTimesLoad ++;
+            console.log("adding");
+            this.loadTwoPost();
+          }
+          else
+            this.twoTimesLoad = 0;
+          console.log("im in load");
     });
+  }
+
+  setObjectsPerPage(number){
+    if(number > this.itemPerPage)
+    {
+      let itemsToLoad = number - this.itemPerPage;
+      if( itemsToLoad%2 == 0 )
+      {
+        for(let i=0; i<itemsToLoad/2; i++)
+        {
+          this.loadTwoPost();
+        }
+        
+      }
+
+
+    //   for(let i = this.itemPerPage+1; i<= number; i++)
+    //   {
+    //     this.postsList.push(data[0]);
+    //   }
+          
+    //   this.itemPerPage = number;
+    // }
+    // else if (number < this.itemPerPage) 
+    // {
+    //     this.postsList.splice(number, this.itemPerPage-number);
+    //     this.itemPerPage = number;
+    // }
+
+
+
+    // this.getPosts(this.postId).then((data) => {
+    //   if(number > this.itemPerPage)
+    //   {
+    //     for(let i = this.itemPerPage+1; i<= number; i++)
+    //     {
+    //       this.postsList.push(data[0]);
+    //     }
+            
+    //     this.itemPerPage = number;
+    //   }
+    //   else if (number < this.itemPerPage) 
+    //   {
+    //       this.postsList.splice(number, this.itemPerPage-number);
+    //       this.itemPerPage = number;
+    //   }
+
+    // });
+  }}
+
+  changePage(newPage){
+    if(newPage >= 1  )
+    {
+      this.currentPage = newPage;
+    }
+      
   }
 }
