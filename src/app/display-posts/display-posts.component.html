@@ -1,10 +1,10 @@
 <div class="inpdiv">
-    <input type="number" [(ngModel)]="objectPerPage" min="1" max="99" value="2" (input)="setObjectsPerPage(objectPerPage)"> &nbsp;: per page
+    <input type="number" [(ngModel)]="objectPerPage" min="1" max="99" value="2" (input)="check(objectPerPage)"> &nbsp;: per page
 </div>
 <br>
 <br>
 <br>
-<ul *ngFor="let data of postsList">
+<ul *ngFor="let data of postsListOnCurrentPage">
     <li>
         <a>{{data.title}}</a> <br>
         {{data.body}}
@@ -13,6 +13,6 @@
 </ul>
 
 
- <button class="box" (click)="changePage(currentPage - 1)">Prev</button>
+ <div class="box" (click)="changePage(currentPage - 1, objectPerPage)">Prev</div>
  <div class="numberPage"> {{currentPage}} </div>
- <button class="box" (click)="changePage(currentPage + 1)">Next</button>
+ <div class="box" (click)="changePage(currentPage + 1, objectPerPage)">Next</div>

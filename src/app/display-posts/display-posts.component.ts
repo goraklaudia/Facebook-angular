@@ -2,7 +2,6 @@ import { Component, OnInit, Input, Output} from '@angular/core';
 import { DisplayPostService } from './display-post.service';
 import { Router } from '@angular/router';
 import { Post } from './Post';
-import { SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-display-posts',
@@ -11,13 +10,14 @@ import { SimpleChanges } from '@angular/core';
 })
 export class DisplayPostsComponent implements OnInit {
 
-  postsList: Post[] = [];
+  postsListOnCurrentPage: Post[] = [];
+  allPostList: Post[] = [];
+
   itemPerPage: number;
   postId: number;
   twoTimesLoad:number;
 
   @Input() currentPage: number;
-  @Input() amountOfPages: number;
 
 
   constructor(private router: Router, private httpService: DisplayPostService) { }
@@ -27,87 +27,90 @@ export class DisplayPostsComponent implements OnInit {
     this.itemPerPage = 2;
     this.postId = 1;
     this.twoTimesLoad = 0;
-    this.loadTwoPost();
+    this.getTwoPost(this.postId).then((data)=>{
+      for(let i=0; i<2; i++)
+        {
+          this.postsListOnCurrentPage.push(data[i]);
+        }
+    })
   }
 
-  getPosts(number) {
-    return new Promise((resolve, reject) => {
-      this.httpService.getPosts(number).subscribe(post => {
-        this.postId++;
-        resolve(post);
+  getPosts(postId) {
+    return new Promise((resolve)=>{
+    this.httpService.getPosts(postId).subscribe(post => {
+      this.allPostList.push(post[0]);
+      this.postId ++;
+      resolve(this.allPostList);
+      })
+    });
+  }
+
+  getTwoPost(id){
+    return new Promise((resolve)=>{
+      let data1;
+      this.getPosts(id)
+      .then((data)=>{
+        data1 = this.getPosts(id+1);
+      })
+      .then(()=>{
+        resolve(data1);
       })
     })
   }
 
-  loadTwoPost() {
-    this.getPosts(this.postId)
-      .then((data) => {
-          if(this.twoTimesLoad!=2)
-          {
-            this.postsList.push(data[0]);
-            this.twoTimesLoad ++;
-            console.log("adding");
-            this.loadTwoPost();
-          }
-          else
-            this.twoTimesLoad = 0;
-          console.log("im in load");
-    });
+  check(number) {
+    if(number>this.itemPerPage && this.allPostList.length-((this.currentPage-1)*number) < number)
+      this.loadAddObjectsPerPage(number);
+    else if(number>this.itemPerPage && this.allPostList.length >= number)
+      this.dontLoadAddObjectsPerPage(number);
+    else if (number<this.itemPerPage)
+      this.removeObjectFromPage(number);
   }
 
-  setObjectsPerPage(number){
-    if(number > this.itemPerPage)
-    {
-      let itemsToLoad = number - this.itemPerPage;
-      if( itemsToLoad%2 == 0 )
+  loadAddObjectsPerPage(number){
+    this.getTwoPost(this.postId).then(()=>{
+      console.log("all posts ");
+      console.log(this.allPostList);
+      if(this.allPostList.length-((this.currentPage-1)*number) >= number)
       {
-        for(let i=0; i<itemsToLoad/2; i++)
+        console.log("ilosc "+this.itemPerPage);
+        console.log("numer " + number);
+        for(let i = this.itemPerPage + number*(this.currentPage-1); i < number*this.currentPage; i++)
         {
-          this.loadTwoPost();
+          this.postsListOnCurrentPage.push(this.allPostList[i]);
         }
-        
+        this.itemPerPage=number;
+        console.log("postyy na stronie" );
+        console.log(this.postsListOnCurrentPage);
+        console.log("blabla");
       }
+      else
+        this.loadAddObjectsPerPage(number);
+    });
 
+  }
 
-    //   for(let i = this.itemPerPage+1; i<= number; i++)
-    //   {
-    //     this.postsList.push(data[0]);
-    //   }
-          
-    //   this.itemPerPage = number;
-    // }
-    // else if (number < this.itemPerPage) 
-    // {
-    //     this.postsList.splice(number, this.itemPerPage-number);
-    //     this.itemPerPage = number;
-    // }
+  dontLoadAddObjectsPerPage(number) {
+    for(let i=this.itemPerPage; i<number; i++)
+    {
+      this.postsListOnCurrentPage.push(this.allPostList[i]);
+    }
+    this.itemPerPage=number;
+  }
 
+  removeObjectFromPage(number) {
 
+  }
 
-    // this.getPosts(this.postId).then((data) => {
-    //   if(number > this.itemPerPage)
-    //   {
-    //     for(let i = this.itemPerPage+1; i<= number; i++)
-    //     {
-    //       this.postsList.push(data[0]);
-    //     }
-            
-    //     this.itemPerPage = number;
-    //   }
-    //   else if (number < this.itemPerPage) 
-    //   {
-    //       this.postsList.splice(number, this.itemPerPage-number);
-    //       this.itemPerPage = number;
-    //   }
-
-    // });
-  }}
-
-  changePage(newPage){
-    if(newPage >= 1  )
+  changePage(newPage, number){
+    if(newPage >= 1 && newPage>this.currentPage && this.allPostList.length-(this.itemPerPage*this.currentPage) == 1)
     {
       this.currentPage = newPage;
+      this.postsListOnCurrentPage.splice(0,this.itemPerPage);
+      console.log(this.postsListOnCurrentPage);
+      this.itemPerPage = 0;
+      this.check(number);
+      console.log(this.postsListOnCurrentPage);
     }
-      
   }
 }
