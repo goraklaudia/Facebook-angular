@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output} from '@angular/core';
 import { DisplayPostService } from './display-post.service';
 import { Router } from '@angular/router';
 import { Post } from './Post';
+import { all } from 'q';
 
 @Component({
   selector: 'app-display-posts',
@@ -16,8 +17,9 @@ export class DisplayPostsComponent implements OnInit {
   itemPerPage: number;
   postId: number;
   twoTimesLoad:number;
+  tmpPage: number;
 
-  @Input() currentPage: number;
+  currentPage: number;
 
 
   constructor(private router: Router, private httpService: DisplayPostService) { }
@@ -27,11 +29,10 @@ export class DisplayPostsComponent implements OnInit {
     this.itemPerPage = 2;
     this.postId = 1;
     this.twoTimesLoad = 0;
+    this.tmpPage = 0;
     this.getTwoPost(this.postId).then((data)=>{
       for(let i=0; i<2; i++)
-        {
           this.postsListOnCurrentPage.push(data[i]);
-        }
     })
   }
 
@@ -58,59 +59,76 @@ export class DisplayPostsComponent implements OnInit {
     })
   }
 
-  check(number) {
-    if(number>this.itemPerPage && this.allPostList.length-((this.currentPage-1)*number) < number)
+  slicer(number) {
+    this.postsListOnCurrentPage = this.allPostList.slice(number*(this.currentPage-1), number*this.currentPage);
+    this.itemPerPage=number;
+  }
+
+  check(number, pomo) {
+    if(number>=this.itemPerPage && this.allPostList.length-((this.currentPage-1)*number) < number)
       this.loadAddObjectsPerPage(number);
     else if(number>this.itemPerPage && this.allPostList.length >= number)
-      this.dontLoadAddObjectsPerPage(number);
+      this.dontLoadAddObjectsPerPage(number, pomo);
     else if (number<this.itemPerPage)
       this.removeObjectFromPage(number);
+    else if (number==this.itemPerPage)
+      this.loadObjectPrevPage();
   }
 
   loadAddObjectsPerPage(number){
     this.getTwoPost(this.postId).then(()=>{
-      console.log("all posts ");
-      console.log(this.allPostList);
       if(this.allPostList.length-((this.currentPage-1)*number) >= number)
-      {
-        console.log("ilosc "+this.itemPerPage);
-        console.log("numer " + number);
-        for(let i = this.itemPerPage + number*(this.currentPage-1); i < number*this.currentPage; i++)
-        {
-          this.postsListOnCurrentPage.push(this.allPostList[i]);
-        }
+      { 
+        if(this.currentPage==1)
+          this.postsListOnCurrentPage = this.allPostList.slice(0, number);
+        else 
+          this.postsListOnCurrentPage = this.allPostList.slice(number*(this.currentPage-1), number*this.currentPage);
         this.itemPerPage=number;
-        console.log("postyy na stronie" );
-        console.log(this.postsListOnCurrentPage);
-        console.log("blabla");
       }
       else
         this.loadAddObjectsPerPage(number);
     });
-
   }
 
-  dontLoadAddObjectsPerPage(number) {
-    for(let i=this.itemPerPage; i<number; i++)
+  dontLoadAddObjectsPerPage(number, tmpPage) {
+    if(tmpPage!=1)
     {
-      this.postsListOnCurrentPage.push(this.allPostList[i]);
+      this.slicer(number);
     }
-    this.itemPerPage=number;
+    else
+    {
+      for(let i=this.itemPerPage*(this.currentPage-1); i <this.itemPerPage*this.currentPage; i++)
+        this.postsListOnCurrentPage.push(this.allPostList[i]);
+      this.itemPerPage=number;
+      this.tmpPage = 0;
+    }
   }
 
   removeObjectFromPage(number) {
+    this.slicer(number);
+  }
 
+  loadObjectPrevPage() {
+    this.slicer(this.itemPerPage);
   }
 
   changePage(newPage, number){
-    if(newPage >= 1 && newPage>this.currentPage && this.allPostList.length-(this.itemPerPage*this.currentPage) == 1)
+    if(newPage >= 1 && newPage>this.currentPage)
     {
       this.currentPage = newPage;
       this.postsListOnCurrentPage.splice(0,this.itemPerPage);
-      console.log(this.postsListOnCurrentPage);
-      this.itemPerPage = 0;
-      this.check(number);
-      console.log(this.postsListOnCurrentPage);
+      if(this.itemPerPage*(this.currentPage-1)+2<this.allPostList.length)
+        this.tmpPage=1;
+      else
+        this.tmpPage=0;
+      this.check(number, this.tmpPage);
+    }
+    else if(newPage >= 1 && newPage<this.currentPage)
+    {
+      this.currentPage = newPage;
+      this.postsListOnCurrentPage.splice(0,this.itemPerPage);
+      this.tmpPage = 1;
+      this.check(number,this.tmpPage);
     }
   }
 }
