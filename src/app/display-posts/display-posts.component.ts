@@ -13,23 +13,23 @@ export class DisplayPostsComponent implements OnInit {
 
   postsListOnCurrentPage: Post[] = [];
   allPostList: Post[] = [];
-
   itemPerPage: number;
   postId: number;
   twoTimesLoad:number;
-  tmpPage: number;
-
+  objectPerPage: number;
   currentPage: number;
-
+  firstElement: number;
 
   constructor(private router: Router, private httpService: DisplayPostService) { }
 
   ngOnInit() {
     this.currentPage = 1;
     this.itemPerPage = 2;
+    this.objectPerPage = 2;
     this.postId = 1;
     this.twoTimesLoad = 0;
-    this.tmpPage = 0;
+    this.firstElement = 0;
+
     this.getTwoPost(this.postId).then((data)=>{
       for(let i=0; i<2; i++)
           this.postsListOnCurrentPage.push(data[i]);
@@ -64,15 +64,19 @@ export class DisplayPostsComponent implements OnInit {
     this.itemPerPage=number;
   }
 
-  check(number, pomo) {
+  check(number) {
+    this.firstElement =  this.itemPerPage*(this.currentPage-1);
+    console.log("first" + this.firstElement);
     if(number>=this.itemPerPage && this.allPostList.length-((this.currentPage-1)*number) < number)
       this.loadAddObjectsPerPage(number);
     else if(number>this.itemPerPage && this.allPostList.length >= number)
-      this.dontLoadAddObjectsPerPage(number, pomo);
+      this.dontLoadAddObjectsPerPage(number);
     else if (number<this.itemPerPage)
       this.removeObjectFromPage(number);
     else if (number==this.itemPerPage)
       this.loadObjectPrevPage();
+    
+    this.findElementOnPages(number);
   }
 
   loadAddObjectsPerPage(number){
@@ -80,32 +84,27 @@ export class DisplayPostsComponent implements OnInit {
       if(this.allPostList.length-((this.currentPage-1)*number) >= number)
       { 
         if(this.currentPage==1)
+        {
           this.postsListOnCurrentPage = this.allPostList.slice(0, number);
+          this.itemPerPage=number;
+        }
         else 
-          this.postsListOnCurrentPage = this.allPostList.slice(number*(this.currentPage-1), number*this.currentPage);
-        this.itemPerPage=number;
+          this.slicer(number);
       }
       else
         this.loadAddObjectsPerPage(number);
     });
+    this.firstElement =  this.itemPerPage*(this.currentPage-1);
   }
 
-  dontLoadAddObjectsPerPage(number, tmpPage) {
-    if(tmpPage!=1)
-    {
-      this.slicer(number);
-    }
-    else
-    {
-      for(let i=this.itemPerPage*(this.currentPage-1); i <this.itemPerPage*this.currentPage; i++)
-        this.postsListOnCurrentPage.push(this.allPostList[i]);
-      this.itemPerPage=number;
-      this.tmpPage = 0;
-    }
+  dontLoadAddObjectsPerPage(number) {
+     this.slicer(number);
+     this.firstElement =  this.itemPerPage*(this.currentPage-1);
   }
 
   removeObjectFromPage(number) {
     this.slicer(number);
+    this.firstElement =  this.itemPerPage*(this.currentPage-1);
   }
 
   loadObjectPrevPage() {
@@ -117,18 +116,20 @@ export class DisplayPostsComponent implements OnInit {
     {
       this.currentPage = newPage;
       this.postsListOnCurrentPage.splice(0,this.itemPerPage);
-      if(this.itemPerPage*(this.currentPage-1)+2<this.allPostList.length)
-        this.tmpPage=1;
-      else
-        this.tmpPage=0;
-      this.check(number, this.tmpPage);
+      this.check(number);
     }
     else if(newPage >= 1 && newPage<this.currentPage)
     {
       this.currentPage = newPage;
       this.postsListOnCurrentPage.splice(0,this.itemPerPage);
-      this.tmpPage = 1;
-      this.check(number,this.tmpPage);
+      this.check(number); 
     }
   }
+
+  findElementOnPages(number) {
+    this.currentPage = Math.floor(this.firstElement/number)+1;
+    // console.log("first " + this.firstElement );
+    console.log("page "+ this.currentPage);
+  }
+
 }
