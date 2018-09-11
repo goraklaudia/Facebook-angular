@@ -63,18 +63,26 @@ export class DisplayPostsComponent implements OnInit {
   }
 
   check(newNrItems) {
-    this.firstElement =  this.itemPerPage*(this.currentPage-1);
+    if(this.objectPerPage>0 && this.objectPerPage<=100)
+    {
+      this.firstElement =  this.itemPerPage*(this.currentPage-1);
 
-    if(newNrItems>=this.itemPerPage && this.allPostList.length-((this.currentPage-1)*newNrItems) < newNrItems)
-      this.loadAddObjectsPerPage(newNrItems);
-    else if(newNrItems>this.itemPerPage && this.allPostList.length >= newNrItems)
-      this.dontLoadAddObjectsPerPage(newNrItems);
-    else if (newNrItems<this.itemPerPage)
-      this.removeObjectFromPage(newNrItems);
-    else if (newNrItems==this.itemPerPage)
-      this.loadObjectPrevPage();
-    
-    this.findElementOnPages(newNrItems);
+      if(newNrItems>=this.itemPerPage && this.allPostList.length-((this.currentPage-1)*newNrItems) < newNrItems)
+        this.loadAddObjectsPerPage(newNrItems);
+      else if(newNrItems>this.itemPerPage && this.allPostList.length >= newNrItems)
+        this.dontLoadAddObjectsPerPage(newNrItems);
+      else if (newNrItems<this.itemPerPage)
+        this.removeObjectFromPage(newNrItems);
+      else if (newNrItems==this.itemPerPage)
+        this.loadObjectPrevPage();
+      
+      this.findElementOnPages(newNrItems);
+    }
+    else
+    {
+      alert("Value cannot be less than 1 or more than 100");
+      this.objectPerPage=2;
+    }
   }
 
   loadAddObjectsPerPage(newNrItems){
