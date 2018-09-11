@@ -62,13 +62,13 @@ export class DisplayPostsComponent implements OnInit {
     this.itemsOnPage=newNrItems;
   }
 
-  check(newNrItems) {
+  chooseFun(newNrItems) {
       this.firstElement =  this.itemsOnPage*(this.currentPage-1);
 
       if(newNrItems>=this.itemsOnPage && this.allPostList.length-((this.currentPage-1)*newNrItems) < newNrItems)
-        this.loadAddObjectsPerPage(newNrItems);
+        this.addLoadObjectsPerPage(newNrItems);
       else if(newNrItems>this.itemsOnPage && this.allPostList.length >= newNrItems)
-        this.dontLoadAddObjectsPerPage(newNrItems);
+        this.addWithoutLoadObjectsPerPage(newNrItems);
       else if (newNrItems<this.itemsOnPage)
         this.removeObjectFromPage(newNrItems);
       else if (newNrItems==this.itemsOnPage)
@@ -77,7 +77,7 @@ export class DisplayPostsComponent implements OnInit {
       this.findElementOnPages(newNrItems);
   }
 
-  loadAddObjectsPerPage(newNrItems){
+  addLoadObjectsPerPage(newNrItems){
     this.getTwoPost(this.postId).then(()=>{
       if(this.allPostList.length-((this.currentPage-1)*newNrItems) >= newNrItems)
       { 
@@ -90,11 +90,11 @@ export class DisplayPostsComponent implements OnInit {
           this.slicer(newNrItems);
       }
       else
-        this.loadAddObjectsPerPage(newNrItems);
+        this.addLoadObjectsPerPage(newNrItems);
     });
   }
 
-  dontLoadAddObjectsPerPage(newNrItems) {
+  addWithoutLoadObjectsPerPage(newNrItems) {
     this.findElementOnPages(newNrItems);
     this.slicer(newNrItems); 
   }
@@ -113,13 +113,13 @@ export class DisplayPostsComponent implements OnInit {
     {
       this.currentPage = newPage;
       this.postsListOnCurrentPage.splice(0,this.itemsOnPage);
-      this.check(newNrItems);
+      this.chooseFun(newNrItems);
     }
     else if(newPage >= 1 && newPage<this.currentPage)
     {
       this.currentPage = newPage;
       this.postsListOnCurrentPage.splice(0,this.itemsOnPage);
-      this.check(newNrItems); 
+      this.chooseFun(newNrItems); 
     }
   }
 
