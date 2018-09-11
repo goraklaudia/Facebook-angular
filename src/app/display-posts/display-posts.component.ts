@@ -12,7 +12,7 @@ export class DisplayPostsComponent implements OnInit {
 
   postsListOnCurrentPage: Post[] = [];
   allPostList: Post[] = [];
-  itemPerPage: number;
+  itemsOnPage: number;
   postId: number;
   objectPerPage: number;
   currentPage: number;
@@ -22,7 +22,7 @@ export class DisplayPostsComponent implements OnInit {
 
   ngOnInit() {
     this.currentPage = 1;
-    this.itemPerPage = 2;
+    this.itemsOnPage = 2;
     this.objectPerPage = 2;
     this.postId = 1;
     this.firstElement = 0;
@@ -59,30 +59,22 @@ export class DisplayPostsComponent implements OnInit {
 
   slicer(newNrItems) {
     this.postsListOnCurrentPage = this.allPostList.slice(newNrItems*(this.currentPage-1), newNrItems*this.currentPage);
-    this.itemPerPage=newNrItems;
+    this.itemsOnPage=newNrItems;
   }
 
   check(newNrItems) {
-    if(this.objectPerPage>0 && this.objectPerPage<=100)
-    {
-      this.firstElement =  this.itemPerPage*(this.currentPage-1);
+      this.firstElement =  this.itemsOnPage*(this.currentPage-1);
 
-      if(newNrItems>=this.itemPerPage && this.allPostList.length-((this.currentPage-1)*newNrItems) < newNrItems)
+      if(newNrItems>=this.itemsOnPage && this.allPostList.length-((this.currentPage-1)*newNrItems) < newNrItems)
         this.loadAddObjectsPerPage(newNrItems);
-      else if(newNrItems>this.itemPerPage && this.allPostList.length >= newNrItems)
+      else if(newNrItems>this.itemsOnPage && this.allPostList.length >= newNrItems)
         this.dontLoadAddObjectsPerPage(newNrItems);
-      else if (newNrItems<this.itemPerPage)
+      else if (newNrItems<this.itemsOnPage)
         this.removeObjectFromPage(newNrItems);
-      else if (newNrItems==this.itemPerPage)
+      else if (newNrItems==this.itemsOnPage)
         this.loadObjectPrevPage();
       
       this.findElementOnPages(newNrItems);
-    }
-    else
-    {
-      alert("Value cannot be less than 1 or more than 100");
-      this.objectPerPage=2;
-    }
   }
 
   loadAddObjectsPerPage(newNrItems){
@@ -92,7 +84,7 @@ export class DisplayPostsComponent implements OnInit {
         if(this.currentPage==1)
         {
           this.postsListOnCurrentPage = this.allPostList.slice(0, newNrItems);
-          this.itemPerPage=newNrItems;
+          this.itemsOnPage=newNrItems;
         }
         else 
           this.slicer(newNrItems);
@@ -113,20 +105,20 @@ export class DisplayPostsComponent implements OnInit {
   }
 
   loadObjectPrevPage() {
-    this.slicer(this.itemPerPage);
+    this.slicer(this.itemsOnPage);
   }
 
   changePage(newPage, newNrItems){
     if(newPage >= 1 && newPage>this.currentPage)
     {
       this.currentPage = newPage;
-      this.postsListOnCurrentPage.splice(0,this.itemPerPage);
+      this.postsListOnCurrentPage.splice(0,this.itemsOnPage);
       this.check(newNrItems);
     }
     else if(newPage >= 1 && newPage<this.currentPage)
     {
       this.currentPage = newPage;
-      this.postsListOnCurrentPage.splice(0,this.itemPerPage);
+      this.postsListOnCurrentPage.splice(0,this.itemsOnPage);
       this.check(newNrItems); 
     }
   }
