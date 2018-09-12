@@ -33,7 +33,6 @@ export class DisplayPostsComponent implements OnInit {
     })
   }
 
-
   getPosts(postId) {
     return new Promise((resolve)=>{
     this.httpService.getPosts(postId).subscribe(post => {
@@ -48,7 +47,7 @@ export class DisplayPostsComponent implements OnInit {
     return new Promise((resolve)=>{
       let data1;
       this.getPosts(id)
-      .then((data)=>{
+      .then(()=>{
         data1 = this.getPosts(id+1);
       })
       .then(()=>{
@@ -66,51 +65,31 @@ export class DisplayPostsComponent implements OnInit {
       this.firstElement =  this.itemsOnPage*(this.currentPage-1);
 
       if(newNrItems>=this.itemsOnPage && this.allPostList.length-((this.currentPage-1)*newNrItems) < newNrItems)
-        this.addLoadObjectsPerPage(newNrItems);
-      else if(newNrItems>this.itemsOnPage && this.allPostList.length >= newNrItems)
-        this.addWithoutLoadObjectsPerPage(newNrItems);
-      else if (newNrItems<this.itemsOnPage)
-        this.removeObjectFromPage(newNrItems);
-      else if (newNrItems==this.itemsOnPage)
-        this.loadObjectPrevPage();
+        this.loadSetPostsPerPage(newNrItems);
+      else
+        this.setPostsPerPageWithoutLoad(newNrItems);
       
       this.findElementOnPages(newNrItems);
   }
 
-  addLoadObjectsPerPage(newNrItems){
+  loadSetPostsPerPage(newNrItems){
     this.getTwoPost(this.postId).then(()=>{
       if(this.allPostList.length-((this.currentPage-1)*newNrItems) >= newNrItems)
           this.slicer(newNrItems);
       else
-        this.addLoadObjectsPerPage(newNrItems);
+        this.loadSetPostsPerPage(newNrItems);
     });
   }
 
-  addWithoutLoadObjectsPerPage(newNrItems) {
+  setPostsPerPageWithoutLoad(newNrItems) {
     this.findElementOnPages(newNrItems);
     this.slicer(newNrItems); 
   }
 
-  removeObjectFromPage(newNrItems) {
-    this.findElementOnPages(newNrItems);
-    this.slicer(newNrItems);
-  }
-
-  loadObjectPrevPage() {
-    this.slicer(this.itemsOnPage);
-  }
-
   changePage(newPage, newNrItems){
-    if(newPage >= 1 && newPage>this.currentPage)
+    if(newPage >=1)
     {
       this.currentPage = newPage;
-      this.postsListOnCurrentPage.splice(0,this.itemsOnPage);
-      this.chooseFun(newNrItems);
-    }
-    else if(newPage >= 1 && newPage<this.currentPage)
-    {
-      this.currentPage = newPage;
-      this.postsListOnCurrentPage.splice(0,this.itemsOnPage);
       this.chooseFun(newNrItems); 
     }
   }
