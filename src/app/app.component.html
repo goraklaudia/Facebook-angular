@@ -1,9 +1,21 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<nav class="nav">
-  Facebook
-</nav>
+<!DOCTYPE html>
+<html>
+<head>
 
-<div class="container">
-  <router-outlet></router-outlet>
-</div>
-<button [routerLink]="['display-posts']">Wyświetl</button>
+</head>  
+
+
+<body>
+  <div class="menu">
+    Facebook
+  </div>
+  
+  <div class="container">
+    <!-- <router-outlet></router-outlet> -->
+    <app-display-posts></app-display-posts>
+    <!-- <app-pagination></app-pagination> -->
+  </div>
+  
+</body>
+
+</html>

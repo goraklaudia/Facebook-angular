@@ -1,3 +1,17 @@
-<input type="number">
-<ul>
+<div class="inpdiv">
+    <input type="number" [(ngModel)]="objectPerPage"  (input)="chooseFun(objectPerPage)"> &nbsp;: per page
+</div>
+<br>
+<br>
+<br>
+<ul *ngFor="let data of postsListOnCurrentPage">
+    <li>
+        <a>{{data.id}}. {{data.title}}</a> <br>
+        {{data.body}}
+        <br>
+    </li>
 </ul>
+
+<div class="box" (click)="changePage(currentPage - 1, objectPerPage)">Prev</div>
+<div class="numberPage"> {{currentPage}} </div>
+<div class="box" (click)="changePage(currentPage + 1, objectPerPage)">Next</div>

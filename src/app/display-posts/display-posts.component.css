@@ -3,4 +3,41 @@ input {
     margin: 5px;
     height: 4%;
     width: 40px;
+    text-align:center;
+}
+
+.inpdiv {
+    text-align:center;
+}
+
+a {
+    font-weight: bold;
+}
+
+.box {
+    float: left;
+    margin: 2px;
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    color: rgba(78, 78, 245, 0.822);
+    border: 0.5px solid rgba(247, 243, 243, 0.452);
+}
+
+.numberPage {
+    float: left;
+    margin: 2px;
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    color: rgb(163, 163, 168);
+}
+
+.box:hover {
+    color: blue;
+    background: rgb(243, 241, 241);
+    cursor: pointer;
+    border: 0.5px inset rgba(182, 179, 179, 0.452);
 }
