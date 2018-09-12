@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { Post } from './Post';
 import { HttpParams } from '@angular/common/http';
-// import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class DisplayPostService {

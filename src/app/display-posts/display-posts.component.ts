@@ -80,15 +80,7 @@ export class DisplayPostsComponent implements OnInit {
   addLoadObjectsPerPage(newNrItems){
     this.getTwoPost(this.postId).then(()=>{
       if(this.allPostList.length-((this.currentPage-1)*newNrItems) >= newNrItems)
-      { 
-        if(this.currentPage==1)
-        {
-          this.postsListOnCurrentPage = this.allPostList.slice(0, newNrItems);
-          this.itemsOnPage=newNrItems;
-        }
-        else 
           this.slicer(newNrItems);
-      }
       else
         this.addLoadObjectsPerPage(newNrItems);
     });
