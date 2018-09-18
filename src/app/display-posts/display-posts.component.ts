@@ -23,8 +23,6 @@ export class DisplayPostsComponent implements OnInit {
   constructor(httpService: DisplayPostService, activatedRoute: ActivatedRoute) {
     this.httpService = httpService;
     this.activatedRoute = activatedRoute;
-    // this.currentPage = 1;
-    // this.itemsOnPage = 2;
     this.objectPerPage = 2;
     this.postId = 1;
     this.firstElement = 0;
@@ -34,11 +32,13 @@ export class DisplayPostsComponent implements OnInit {
     this.activatedRoute.params.subscribe(params => {
       this.currentPage = params['nrPage'];
       this.objectPerPage = params['nrSize'];
+      if(this.currentPage==null)
+        this.currentPage = 1;
+      if(this.objectPerPage==null)
+        this.objectPerPage = 2;
       this.itemsOnPage =  this.objectPerPage;
       this.chooseFun(this.objectPerPage);
     })
-    
-
   }
 
   

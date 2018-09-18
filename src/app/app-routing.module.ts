@@ -4,8 +4,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { DisplayPostsComponent } from './display-posts/display-posts.component';
 
 const appRoutes: Routes = [
-  {path:'page/:nrPage/size/:nrSize', component: DisplayPostsComponent}
-  // {path: '', component: DisplayPostsComponent}
+  {path:'page/:nrPage/size/:nrSize', component: DisplayPostsComponent},
+  {path: '', component: DisplayPostsComponent}
 ]
 
 @NgModule({
