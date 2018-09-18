@@ -9,13 +9,11 @@ import { DisplayPostService } from './display-posts/display-post.service';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import {NgxPaginationModule} from 'ngx-pagination';
-import { PaginationComponent } from './pagination/pagination.component'; 
 
 @NgModule({
   declarations: [
     AppComponent,
-    DisplayPostsComponent,
-    PaginationComponent
+    DisplayPostsComponent
   ],
   imports: [
     BrowserModule,    

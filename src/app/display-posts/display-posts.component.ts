@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output} from '@angular/core';
 import { DisplayPostService } from './display-post.service';
-import { Router } from '@angular/router';
+import { Router, Route, ActivatedRoute } from '@angular/router';
 import { Post } from './Post';
 
 @Component({
@@ -14,25 +14,34 @@ export class DisplayPostsComponent implements OnInit {
   allPostList: Post[] = [];
   itemsOnPage: number;
   postId: number;
-  objectPerPage: number;
-  currentPage: number;
+  @Input() currentPage: number;
+  @Input() objectPerPage: number;
   firstElement: number;
+  httpService: DisplayPostService;
+  activatedRoute: ActivatedRoute;
 
-  constructor(private router: Router, private httpService: DisplayPostService) { }
-
-  ngOnInit() {
-    this.currentPage = 1;
-    this.itemsOnPage = 2;
+  constructor(httpService: DisplayPostService, activatedRoute: ActivatedRoute) {
+    this.httpService = httpService;
+    this.activatedRoute = activatedRoute;
     this.objectPerPage = 2;
     this.postId = 1;
     this.firstElement = 0;
+  }
 
-    this.getTwoPost(this.postId).then((data)=>{
-      for(let i=0; i<2; i++)
-          this.postsListOnCurrentPage.push(data[i]);
+  ngOnInit() {
+    this.activatedRoute.params.subscribe(params => {
+      this.currentPage = params['nrPage'];
+      this.objectPerPage = params['nrSize'];
+      if(this.currentPage==null)
+        this.currentPage = 1;
+      if(this.objectPerPage==null)
+        this.objectPerPage = 2;
+      this.itemsOnPage =  this.objectPerPage;
+      this.chooseFun(this.objectPerPage);
     })
   }
 
+  
   getPosts(postId) {
     return new Promise((resolve)=>{
     this.httpService.getPosts(postId).subscribe(post => {
@@ -62,14 +71,13 @@ export class DisplayPostsComponent implements OnInit {
   }
 
   chooseFun(newNrItems) {
-      this.firstElement =  this.itemsOnPage*(this.currentPage-1);
-
-      if(newNrItems>=this.itemsOnPage && this.allPostList.length-((this.currentPage-1)*newNrItems) < newNrItems)
-        this.loadSetPostsPerPage(newNrItems);
-      else
-        this.setPostsPerPageWithoutLoad(newNrItems);
-      
-      this.findElementOnPages(newNrItems);
+    this.firstElement =  this.itemsOnPage*(this.currentPage-1);
+    if(newNrItems>=this.itemsOnPage && this.allPostList.length-((this.currentPage-1)*newNrItems) < newNrItems)
+      this.loadSetPostsPerPage(newNrItems);
+    else
+      this.setPostsPerPageWithoutLoad(newNrItems);
+    
+    this.findElementOnPages(newNrItems);
   }
 
   loadSetPostsPerPage(newNrItems){
