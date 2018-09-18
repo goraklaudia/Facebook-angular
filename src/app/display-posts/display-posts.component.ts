@@ -2,7 +2,6 @@ import { Component, OnInit, Input, Output} from '@angular/core';
 import { DisplayPostService } from './display-post.service';
 import { Router, Route, ActivatedRoute } from '@angular/router';
 import { Post } from './Post';
-import { AppModule } from '../app.module';
 
 @Component({
   selector: 'app-display-posts',
