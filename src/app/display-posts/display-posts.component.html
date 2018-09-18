@@ -5,7 +5,8 @@
 <br>
 <br>
 <ul *ngFor="let data of postsListOnCurrentPage">
-    <li>
+        <!-- [routerLink]="['/page', currentPage, '/size', objectPerPage]" -->
+    <li >
         <a>{{data.id}}. {{data.title}}</a> <br>
         {{data.body}}
         <br>

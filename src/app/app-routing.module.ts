@@ -4,7 +4,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { DisplayPostsComponent } from './display-posts/display-posts.component';
 
 const appRoutes: Routes = [
-  {path:'display-posts', component: DisplayPostsComponent}
+  {path:'page/:nrPage/size/:nrSize', component: DisplayPostsComponent}
+  // {path: '', component: DisplayPostsComponent}
 ]
 
 @NgModule({
@@ -17,4 +18,7 @@ const appRoutes: Routes = [
   ],
   declarations: []
 })
-export class AppRoutingModule { }
+export class AppRoutingModule { 
+
+  constructor () {}
+}
