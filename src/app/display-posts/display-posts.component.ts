@@ -30,12 +30,22 @@ export class DisplayPostsComponent implements OnInit {
     this.objectPerPage = 3;
     this.postId = 1;
     this.firstElement = 0;
-    this.postsIds = [1,2,3];
+    this.postsIds = [1,3];
 
-    this.httpService.getPosts(this.postsIds, this.postList).subscribe()
-
+    this.httpService.getPosts(this.postsIds, this.postList)
     this.postsListOnCurrentPage = Observable.of(this.postList);
   }
 
+  changePage(currentPage, objectPerPage) {
+    if (currentPage === 0) return;
+    this.currentPage = currentPage;
+    this.firstElement = (this.currentPage-1)*objectPerPage +1;
+    this.postsIds = [this.firstElement, objectPerPage];
+    
+    this.postList = [];
+
+    this.httpService.getPosts(this.postsIds, this.postList)
+    this.postsListOnCurrentPage = Observable.of(this.postList);
+  }
 
 }

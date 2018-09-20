@@ -10,10 +10,16 @@ export class DisplayPostService {
 
   constructor(private http: HttpClient) { }
 
-  getPosts(params: number[], postList): Observable<Post> {
-    return Observable.from(params)
-      .concatMap(id => <Observable<Post>>this.http.get(`http://jsonplaceholder.typicode.com/posts?id=${id}`))
-      .do(post => { postList.push(post[0]); })
+  getPosts(params: number[], postList) {
+    let id = params[0];
+    for (let i = 0; i < params[1]; i++) {
+      setTimeout(() => {
+        this.http.get(`http://jsonplaceholder.typicode.com/posts?id=${id++}`).map(data => { postList.push(data[0]); }).subscribe();
+      },
+        1000 * i
+      );
+
+    }
   }
 
 }
