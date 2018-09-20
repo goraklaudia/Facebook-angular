@@ -3,14 +3,18 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { Post } from './Post';
 import { HttpParams } from '@angular/common/http';
+import 'rxjs/Rx';
 
 @Injectable()
 export class DisplayPostService {
 
-  data: any;
   constructor(private http: HttpClient) { }
 
-  getPosts(param): Observable<Post> {
-    return this.http.get<Post>('http://jsonplaceholder.typicode.com/posts', {params: new HttpParams().set('id', param)});
+  getPosts(params: number[]): Observable<Post> {
+    let postList = [];
+    return Observable.from(params)
+      .concatMap(id => <Observable<Post>>this.http.get(`http://jsonplaceholder.typicode.com/posts?id=${id}`))
+      .do(post => { postList.push(post[0]); })
   }
+
 }

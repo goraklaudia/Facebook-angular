@@ -4,7 +4,7 @@
 <br>
 <br>
 <br>
-<ul *ngFor="let data of postsListOnCurrentPage">
+<ul *ngFor="let data of postsListOnCurrentPage | async">
     <li>
         <a>{{data.id}}. {{data.title}}</a> <br>
         {{data.body}}

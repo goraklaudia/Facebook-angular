@@ -2,6 +2,8 @@ import { Component, OnInit, Input, Output} from '@angular/core';
 import { DisplayPostService } from './display-post.service';
 import { Router } from '@angular/router';
 import { Post } from './Post';
+import { Observable } from '../../../node_modules/rxjs/Observable';
+import 'rxjs/Rx';
 
 @Component({
   selector: 'app-display-posts',
@@ -10,13 +12,14 @@ import { Post } from './Post';
 })
 export class DisplayPostsComponent implements OnInit {
 
-  postsListOnCurrentPage: Post[] = [];
+  postsListOnCurrentPage: Observable<Post>;
   allPostList: Post[] = [];
   itemsOnPage: number;
   postId: number;
   objectPerPage: number;
   currentPage: number;
   firstElement: number;
+  postsIds: number[];
 
   constructor(private router: Router, private httpService: DisplayPostService) { }
 
@@ -26,76 +29,10 @@ export class DisplayPostsComponent implements OnInit {
     this.objectPerPage = 2;
     this.postId = 1;
     this.firstElement = 0;
+    this.postsIds = [1,2,3];
 
-    this.getTwoPost(this.postId).then((data)=>{
-      for(let i=0; i<2; i++)
-          this.postsListOnCurrentPage.push(data[i]);
-    })
+    this.postsListOnCurrentPage = this.httpService.getPosts(this.postsIds);
   }
 
-  getPosts(postId) {
-    return new Promise((resolve)=>{
-    this.httpService.getPosts(postId).subscribe(post => {
-      this.allPostList.push(post[0]);
-      this.postId ++;
-      resolve(this.allPostList);
-      })
-    });
-  }
-
-  getTwoPost(id){
-    return new Promise((resolve)=>{
-      let data1;
-      this.getPosts(id)
-      .then(()=>{
-        data1 = this.getPosts(id+1);
-      })
-      .then(()=>{
-        resolve(data1);
-      })
-    })
-  }
-
-  slicer(newNrItems) {
-    this.postsListOnCurrentPage = this.allPostList.slice(newNrItems*(this.currentPage-1), newNrItems*this.currentPage);
-    this.itemsOnPage=newNrItems;
-  }
-
-  chooseFun(newNrItems) {
-      this.firstElement =  this.itemsOnPage*(this.currentPage-1);
-
-      if(newNrItems>=this.itemsOnPage && this.allPostList.length-((this.currentPage-1)*newNrItems) < newNrItems)
-        this.loadSetPostsPerPage(newNrItems);
-      else
-        this.setPostsPerPageWithoutLoad(newNrItems);
-      
-      this.findElementOnPages(newNrItems);
-  }
-
-  loadSetPostsPerPage(newNrItems){
-    this.getTwoPost(this.postId).then(()=>{
-      if(this.allPostList.length-((this.currentPage-1)*newNrItems) >= newNrItems)
-          this.slicer(newNrItems);
-      else
-        this.loadSetPostsPerPage(newNrItems);
-    });
-  }
-
-  setPostsPerPageWithoutLoad(newNrItems) {
-    this.findElementOnPages(newNrItems);
-    this.slicer(newNrItems); 
-  }
-
-  changePage(newPage, newNrItems){
-    if(newPage >=1)
-    {
-      this.currentPage = newPage;
-      this.chooseFun(newNrItems); 
-    }
-  }
-
-  findElementOnPages(newNrItems) {
-    this.currentPage = Math.floor(this.firstElement/newNrItems)+1;
-  }
 
 }
