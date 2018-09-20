@@ -10,8 +10,7 @@ export class DisplayPostService {
 
   constructor(private http: HttpClient) { }
 
-  getPosts(params: number[]): Observable<Post> {
-    let postList = [];
+  getPosts(params: number[], postList): Observable<Post> {
     return Observable.from(params)
       .concatMap(id => <Observable<Post>>this.http.get(`http://jsonplaceholder.typicode.com/posts?id=${id}`))
       .do(post => { postList.push(post[0]); })

@@ -12,7 +12,7 @@ import 'rxjs/Rx';
 })
 export class DisplayPostsComponent implements OnInit {
 
-  postsListOnCurrentPage: Observable<Post>;
+  postsListOnCurrentPage;
   allPostList: Post[] = [];
   itemsOnPage: number;
   postId: number;
@@ -20,18 +20,21 @@ export class DisplayPostsComponent implements OnInit {
   currentPage: number;
   firstElement: number;
   postsIds: number[];
+  postList = [];
 
   constructor(private router: Router, private httpService: DisplayPostService) { }
 
   ngOnInit() {
     this.currentPage = 1;
     this.itemsOnPage = 2;
-    this.objectPerPage = 2;
+    this.objectPerPage = 3;
     this.postId = 1;
     this.firstElement = 0;
     this.postsIds = [1,2,3];
 
-    this.postsListOnCurrentPage = this.httpService.getPosts(this.postsIds);
+    this.httpService.getPosts(this.postsIds, this.postList).subscribe()
+
+    this.postsListOnCurrentPage = Observable.of(this.postList);
   }
 
 
