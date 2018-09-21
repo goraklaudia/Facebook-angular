@@ -4,7 +4,9 @@ import 'rxjs/Rx';
 
 @Injectable()
 export class DisplayPostService {
-  i = 0;
+  
+  i:number = 0;
+
   constructor(private http: HttpClient) { }
 
   getPosts(params: number[], postList) {
