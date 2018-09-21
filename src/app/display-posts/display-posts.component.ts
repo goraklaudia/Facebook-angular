@@ -30,7 +30,7 @@ export class DisplayPostsComponent implements OnInit {
     this.objectPerPage = 3;
     this.postId = 1;
     this.firstElement = 0;
-    this.postsIds = [1,3];
+    this.postsIds = [this.currentPage, this.objectPerPage];
 
     this.httpService.getPosts(this.postsIds, this.postList)
     this.postsListOnCurrentPage = Observable.of(this.postList);
